@@ -1,0 +1,475 @@
+{
+	"info": {
+		"_postman_id": "8912f613-43ff-4138-8d7e-c05151d34e0e",
+		"name": "jsonplaceholder",
+		"description": "Collection of API tests for /posts service in https://jsonplaceholder.typicode.com/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c8b9271-0f44-468f-acaa-41cc7fd09b7f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let postNumber = pm.response.json().length;",
+							"",
+							"pm.test(\"Total post number is 100\", function () {",
+							"    pm.expect(postNumber).equal(pm.iterationData.get(\"totalPosts\"))",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get post by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6b44dc6e-d9ee-4799-bcdd-4d179b6047cc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let postId = pm.response.json()['id'];",
+							"",
+							"pm.test(\"post id is 1\", function() {",
+							"    pm.expect(postId).equal(pm.iterationData.get(\"postId\"));",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/{{id}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get comments from post id 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc8988bf-41a9-4ec4-9ea2-99725e2a8d51",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let comments = pm.response.json();",
+							"",
+							"for (let i = 0; i <= comments.length - 1; i++) {",
+							"    pm.test(`Comment id ${i} is from post id 1`, function () {",
+							"        console.log(comments[i]['postId'])",
+							"        pm.expect(comments[i]['postId']).eq(pm.iterationData.get(\"postId\"))",
+							"    }); ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/{{id}}/comments",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"{{id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2b05128a-dd06-4429-b66a-c1b9bf1f8337",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let comments = pm.response.json();",
+							"",
+							"",
+							"for (let i = 0; i <= comments.length - 1; i++) {",
+							"    pm.test(`Comment id ${i} is from post id 1`, function () {",
+							"        pm.expect(comments[i]['postId']).eq(pm.iterationData.get(\"postId\"))",
+							"    }); ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/comments?postId={{id}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"comments"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "{{id}}"
+						}
+					]
+				},
+				"description": "Find comments from all comments which postId is 1"
+			},
+			"response": []
+		},
+		{
+			"name": "filter post by user id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "21b87147-0fe7-491a-aebc-777e8f9ff7d7",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let posts = pm.response.json();",
+							"let userId = pm.response.json()[0]['userId'];",
+							"",
+							"for (let i = 0; i <= posts.length - 1; i++) {",
+							"    pm.test(`Post id ${posts[i][\"id\"]} is from user id ${userId}`, function () {",
+							"        pm.expect(posts[i]['userId']).eq(pm.iterationData.get(\"userId\"))",
+							"    }); ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts?userId={{userId}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c34dab1d-4ee8-433c-90dc-8738e5536c2f",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status201\"));",
+							"});",
+							"",
+							"let newPost = pm.response.json()",
+							"",
+							"pm.test(\"New post id is 101\", function () {",
+							"    pm.expect(newPost['id']).equal(pm.iterationData.get(\"newPostId\"))",
+							"});",
+							"",
+							"pm.test(\"New post title is foo\", function () {",
+							"    pm.expect(newPost['title']).equal(pm.iterationData.get(\"title\"))",
+							"});",
+							"",
+							"pm.test(\"New post body is bar\", function () {",
+							"    pm.expect(newPost['body']).equal(pm.iterationData.get(\"body\"))",
+							"});",
+							"",
+							"pm.test(\"New post is post by user id 1\", function () {",
+							"    pm.expect(newPost['userId']).equal(pm.iterationData.get(\"userId\"))",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"foo\",\n    \"body\": \"bar\",\n    \"userId\": 1\n}"
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put request on post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e7a454a-703a-49c6-aba8-4a1c90079521",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let post = pm.response.json();",
+							"",
+							"pm.test(\"Edit post id 1 returns post id 1\", function () {",
+							"    pm.expect(post['id']).equal(pm.iterationData.get(\"postId\"))",
+							"});",
+							"",
+							"pm.test(\"Edit post id by user id 1\", function () {",
+							"    pm.expect(post['userId']).equal(pm.iterationData.get(\"userId\"))",
+							"});",
+							"",
+							"pm.test(\"Edit post title to foo successfully\", function () {",
+							"    pm.expect(post['title']).equal(pm.iterationData.get(\"title\"))",
+							"});",
+							"",
+							"pm.test(\"Edit post body to bar successfully\", function () {",
+							"    pm.expect(post['body']).equal(pm.iterationData.get(\"body\"))",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \n    \"id\": 1,\n    \"title\": \"foo\",\n    \"body\": \"bar\",\n    \"userId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/{{id}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "436a9476-8296-4e76-8bc5-c2ffd33b7ea6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let postId = pm.response.json()['id'];",
+							"let postTitle = pm.response.json()['title'];",
+							"",
+							"pm.test(\"Update post returns post id successfully\", function () {",
+							"    pm.expect(postId).equal(pm.iterationData.get(\"postId\"))",
+							"});",
+							"",
+							"pm.test(\"Update post title successfully\", function () {",
+							"    pm.expect(postTitle).equal(pm.iterationData.get(\"title\"))",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"foo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/{{id}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1698c1b3-b4d8-4354-ad0a-fa5b7f729bb3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(pm.iterationData.get(\"status200\"));",
+							"});",
+							"",
+							"let result = pm.response.json()",
+							"",
+							"pm.test(\"Delete a post returns empty array\", function () {",
+							"    pm.expect(result).be.empty",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/{{id}}",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

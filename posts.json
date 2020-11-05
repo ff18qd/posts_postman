@@ -1,0 +1,12 @@
+[
+  {
+    "status200": 200,
+    "status201": 201,
+    "postId": 1,
+    "totalPosts": 100,
+    "userId": 1,
+    "title": "foo",
+    "body": "bar",
+    "newPostId": 101
+  }
+]
